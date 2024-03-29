@@ -22,9 +22,7 @@ class RobotMission(Model):
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
             
-            
         # Create waste blocks
-        
         for i in range(self.num_waste):
             a = NuclearWaste(i+self.num_agents, self)
             self.schedule.add(a)
@@ -33,20 +31,35 @@ class RobotMission(Model):
             x = self.random.randrange(self.grid.width)
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
-        
-        
-            
         self.running = True
         
-        
-        
     def do(self, agent, action):
-        # IF ACTION == MOVE
-        if action == "move":
-            # Feasability of movement according to neighbors
-            agent.move(self)
-            
-        percepts = {"nada" : 0} 
+        percepts = agent.knowledge
+
+        if action is tuple:
+            x, y = agent.pos
+
+            self.grid.move_agent(agent, (action[0], action[1]))
+
+            for pos in ["pos1", "pos2", "pos3", "pos4", "pos5", "pos6", "pos7", "pos8", "pos9"]:
+                percepts[pos]["radioactivity_level"] = self.model.grid.get_cell_list_contents([self.pos])
+                percepts[pos]["wasteType"] = 
+                percepts[pos]["agent"] = 
+
+        if action == "collect":
+            # Check if there is waste to collect
+            if 
+            agent.collect(self)
+
+        if action == "deposit":
+            # Check if there is a disposal zone to deposit
+            agent.deposit(self)
+
+        # IF ACTION == TRANSFORM
+        if action == "transform":
+            # Check if there is a disposal zone to transform
+            agent.transform(self)   
+
         return percepts
         
     def step(self):

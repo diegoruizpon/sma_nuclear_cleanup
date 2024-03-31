@@ -2,13 +2,16 @@ from mesa import Agent
 import random
 
 
-class greenAgent(Agent):
+class baseAgent(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         
         self.first_step = 0
+        self.robot_type = None
 
         self.knowledge = {
+            "waste_type_I_can_hold": self.robot_type,
+            "zone_I_can_move": self.robot_type,
             "pos": (0,0),
             "wasteCountHold": 0,
             "wasteTypeHold": 0,
@@ -47,8 +50,8 @@ class greenAgent(Agent):
         return self.knowledge
     
     def deliberate(self, knowledge):
-        positions = ["pos_robot", "pos_N", "pos_W", "pos_S", "pos_E"]
-        comprehended_list = [f"{pos}, {self.knowledge[pos]['wasteType']}" for pos in positions]
+        # positions = ["pos_robot", "pos_N", "pos_W", "pos_S", "pos_E"]
+        # comprehended_list = [f"{pos}, {self.knowledge[pos]['wasteType']}" for pos in positions]
         #print(f"I am {self.unique_id}. My knowledge is {self.knowledge['pos']} : {comprehended_list}")
         print(self.knowledge)
         possible_positions = self.model.grid.get_neighborhood(self.knowledge["pos"], moore=False, include_center=False)
@@ -64,29 +67,33 @@ class greenAgent(Agent):
                 valid_directions.append("W")
         action = None
         # 2 green waste -> 1 yellow waste
-        if self.knowledge["wasteCountHold"] == 2:
+        if self.knowledge["waste_type_I_can_hold"] == 2 and self.knowledge["wasteCountHold"] == 1:
+            if "E" in valid_directions:
+                action = "move_E"
+            else:
+                action = "deposit"
+        elif self.knowledge["wasteCountHold"] == 2:
             action = "transform"
         # agent has 1 yellow waste -> either deposit or moves east
-        elif self.knowledge["wasteTypeHold"] == "yellow":
-            print("Está acáaaaa")
+        elif self.knowledge["wasteTypeHold"] == (self.knowledge["waste_type_I_can_hold"] + 1): # Means he holds a waste that has been transformed
             # there is zone2 at east and agent has 1 yellow waste -> deposit
-            if self.knowledge["pos_W"]["radioactivity_level"] > 0.33:
+            if self.knowledge["pos_W"]["radioactivity_level"] > self.knowledge["zone_I_can_move"]: # WHY Pos_W ??
                 action = "deposit"
             
-            elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2
-                action = "deposit"
+            # elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2
+            #     action = "deposit"
             # he has 1 yellow waste -> move right
             elif "E" in valid_directions:
                 action = "move_E"
         # Here we know that it has 0 or 1 green waste
         # there is a green waste in agent position -> collect
         
-        elif self.knowledge["pos_robot"]["wasteType"] == "green":
+        elif self.knowledge["pos_robot"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:
             action = "collect"
         else:
             # Try to move to a place with waste
             for i in valid_directions:
-                if self.knowledge[f"pos_{i}"]["wasteType"] == "green":
+                if self.knowledge[f"pos_{i}"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:
                     action = f"move_{i}"
                     break
         if action == None:
@@ -110,3 +117,29 @@ class greenAgent(Agent):
             #print(f"Agent {self.unique_id} is in {self.pos}")   
         
 
+class greenAgent(baseAgent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.robot_type = 0
+
+    def deliberate(self, knowledge):
+        action = super().deliberate(knowledge)  
+        return action
+
+class yellowAgent(baseAgent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.robot_type = 1
+
+    def deliberate(self, knowledge):
+        action = super().deliberate(knowledge)  
+        return action
+
+class redAgent(baseAgent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.robot_type = 2
+
+    def deliberate(self, knowledge):
+        action = super().deliberate(knowledge)  
+        return action

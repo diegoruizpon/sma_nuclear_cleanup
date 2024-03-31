@@ -1,8 +1,9 @@
 from mesa import Agent, Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
-from agents import greenAgent
+from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, WasteDisposalZone, NuclearWaste
+import random
 
 class RobotMission(Model):
     def __init__(self, N, num_waste , width, height):
@@ -15,14 +16,20 @@ class RobotMission(Model):
         # Create Radioactivity
         for x in range(self.grid.width):
             for y in range(self.grid.height):
-                a = Radioactivity(y+x*self.grid.height, self, 0)
+                
+                if x <= self.grid.width//3:
+                    a = Radioactivity(y+x*self.grid.height, self, 1)
+                elif x <= 2*self.grid.width//3 and x > self.grid.width//3:
+                    a = Radioactivity(y+x*self.grid.height, self, 2)
+                else:
+                    a = Radioactivity(y+x*self.grid.height, self, 3)
                 self.schedule.add(a)
                 self.grid.place_agent(a, (x, y))
 
         # Create waste blocks
         for i in range(self.num_waste):
             index_ = i+self.grid.width*self.grid.height
-            a = NuclearWaste(index_, self, "green")
+            a = NuclearWaste(index_, self, 0) # All the waste starts being green
             self.schedule.add(a)
             
             # Add the agent to a random grid cell
@@ -31,8 +38,8 @@ class RobotMission(Model):
             self.grid.place_agent(a, (x, y))
         
         # Create robots
-        for i in range(self.num_agents):
-            a = greenAgent(i+self.num_waste+self.grid.width*self.grid.height, self)
+        def create_agent(AgentClass):
+            a = AgentClass(i+self.num_waste+self.grid.width*self.grid.height, self)
             self.schedule.add(a)
             
             # Add the agent to a random grid cell
@@ -59,9 +66,24 @@ class RobotMission(Model):
                 for element in elements:
                     if isinstance(element, Radioactivity):
                         a.knowledge[f"pos_{direction}"]["radioactivity_level"] = element.radioactivity_level
-                        a.knowledge[f"pos_{direction}"]["agent"] = False # vsvk mdofvndorvn sfnsofv XXXXXXXXX
+                    if isinstance(element, greenAgent) or isinstance(element, yellowAgent) or isinstance(element, redAgent):
+                        a.knowledge[f"pos_{direction}"]["agent"] = True
                     if isinstance(element, NuclearWaste):
                         a.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
+
+        num_each_agent = self.num_agents // 3
+
+        for i in range(num_each_agent):
+            create_agent(greenAgent)
+
+        for i in range(num_each_agent):
+            create_agent(yellowAgent)
+
+        for i in range(num_each_agent):
+            create_agent(redAgent)
+
+        
+            
             
         self.running = True
         
@@ -99,9 +121,9 @@ class RobotMission(Model):
                 for element in elements:
                     if isinstance(element, Radioactivity):
                         agent.knowledge[f"pos_{direction}"]["radioactivity_level"] = element.radioactivity_level
-                        agent.knowledge[f"pos_{direction}"]["agent"] = False # vsvk mdofvndorvn sfnsofv XXXXXXXXX
+                    if isinstance(element, greenAgent) or isinstance(element, yellowAgent) or isinstance(element, redAgent):
+                        agent.knowledge[f"pos_{direction}"]["agent"] = True
                     if isinstance(element, NuclearWaste):
-                        #print(f"in cell {cell} there is {element}, element.robot = {element.robot}")
                         if element.robot == None:
                             #print("--"*10)
                             agent.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
@@ -139,8 +161,10 @@ class RobotMission(Model):
             #     print(element)
             self.schedule.remove(elements[0])
             elements[0].robot = None
-            if elements[1].wasteType == "green":
-                elements[1].wasteType = "yellow"
+            # if elements[1].wasteType == "green":
+            #     elements[1].wasteType = "yellow"
+            elements[1].wasteType += 1
+
             agent.knowledge["wasteTypeHold"] = elements[1].wasteType
             agent.knowledge["have"] = [elements[1]]
 

@@ -8,7 +8,7 @@ class Radioactivity(Agent):
         super().__init__(unique_id, model)
         
         # Radioactivity level
-        self.radioactivity_level = self.random.uniform(1.0/3 * (zone-1), 1.0/3 * zone)
+        self.radioactivity_level = zone
         
         #Position
         #self.pos = pos It has to as self. pos to grid

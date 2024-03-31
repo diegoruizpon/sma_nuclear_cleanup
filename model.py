@@ -33,7 +33,7 @@ class RobotMission(Model):
             self.schedule.add(a)
             
             # Add the agent to a random grid cell
-            x = self.random.randrange(self.grid.width)
+            x = self.random.randrange(self.grid.width//3)
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
         
@@ -43,7 +43,7 @@ class RobotMission(Model):
             self.schedule.add(a)
             
             # Add the agent to a random grid cell
-            x = self.random.randrange(self.grid.width)
+            x = self.random.randrange(self.grid.width//3)
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
             a.knowledge["pos"] = (x, y)
@@ -72,15 +72,15 @@ class RobotMission(Model):
                         a.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
 
         num_each_agent = self.num_agents // 3
-
+        num_each_agent = 1
         for i in range(num_each_agent):
             create_agent(greenAgent)
 
-        for i in range(num_each_agent):
-            create_agent(yellowAgent)
+        # for i in range(num_each_agent):
+        #     create_agent(yellowAgent)
 
-        for i in range(num_each_agent):
-            create_agent(redAgent)
+        # for i in range(num_each_agent):
+        #     create_agent(redAgent)
 
         
             

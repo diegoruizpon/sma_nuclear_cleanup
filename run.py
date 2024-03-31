@@ -14,7 +14,7 @@ def agent_portrayal(agent):
     # if agent.unique_id > (25-1) and agent.unique_id < (25+3-1):
     #     portrayal["Color"] = agent.wasteType#"green"
     # if agent.unique_id > (25+3-1):
-    #     portrayal["Color"] = "red"
+    #     portrayal["Color"] = "red" 
     
     light_green = "#D0F0C0"
     light_yellow = "#FFE8A1"
@@ -42,7 +42,7 @@ def agent_portrayal(agent):
 
 if __name__=="__main__":
     grid = CanvasGrid(agent_portrayal, 15, 5, 600, 400)
-    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": 5, "height": 5, "num_waste": 3})
+    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": 9, "height": 3, "num_waste": 2})
     #server.port = 8540
     import random
     server.port = random.randint(1, 8540)

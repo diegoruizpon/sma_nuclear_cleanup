@@ -121,6 +121,8 @@ class greenAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.robot_type = 0
+        self.knowledge["waste_type_I_can_hold"] = self.robot_type
+        self.knowledge["zone_I_can_move"] = self.robot_type
 
     def deliberate(self, knowledge):
         action = super().deliberate(knowledge)  
@@ -130,6 +132,8 @@ class yellowAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.robot_type = 1
+        self.knowledge["waste_type_I_can_hold"] = self.robot_type
+        self.knowledge["zone_I_can_move"] = self.robot_type
 
     def deliberate(self, knowledge):
         action = super().deliberate(knowledge)  
@@ -139,6 +143,8 @@ class redAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.robot_type = 2
+        self.knowledge["waste_type_I_can_hold"] = self.robot_type
+        self.knowledge["zone_I_can_move"] = self.robot_type
 
     def deliberate(self, knowledge):
         action = super().deliberate(knowledge)  

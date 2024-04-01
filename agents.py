@@ -69,8 +69,19 @@ class baseAgent(Agent):
                     print(self.knowledge["pos_E"]["radioactivity_level"], self.knowledge["zone_I_can_move"])
             elif cell[0] < self.pos[0]:  
                 valid_directions.append("W")
+
+        # pos_list = ["N", "S", "E", "W"]
+        # for pos in pos_list:
+        #     # if there is a robot in the position, the agent can't move there
+        #     if self.knowledge[f"pos_{pos}"]["agent"] != False and pos in valid_directions:
+        #         print(f"Agent {self.unique_id} can't move to {pos}")
+        #         print(valid_directions)
+        #         valid_directions.remove(pos)
+        #         print(self.knowledge)
+
+
         action = None
-        # 2 green waste -> 1 yellow waste
+
         if self.knowledge["waste_type_I_can_hold"] == 2 and self.knowledge["wasteCountHold"] == 1:
             if "E" in valid_directions:
                 action = "move_E"
@@ -148,7 +159,7 @@ class redAgent(baseAgent):
         super().__init__(unique_id, model)
         self.robot_type = 2
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
-        self.knowledge["zone_I_can_move"] = self.robot_type
+        self.knowledge["zone_I_can_move"] = 10
 
     def deliberate(self, knowledge):
         action = super().deliberate(knowledge)  

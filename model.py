@@ -21,6 +21,8 @@ class RobotMission(Model):
                     a = Radioactivity(y+x*self.grid.height, self, 0)
                 elif x <= 2*self.grid.width//3 and x > self.grid.width//3:
                     a = Radioactivity(y+x*self.grid.height, self, 1)
+                elif x == self.grid.width-1: # waste disposal zone
+                    a = Radioactivity(y+x*self.grid.height, self, 10)                
                 else:
                     a = Radioactivity(y+x*self.grid.height, self, 2)
                 self.schedule.add(a)
@@ -48,7 +50,7 @@ class RobotMission(Model):
             elif color == "yellow":
                 p1, p2 = self.grid.width//3, 2*self.grid.width//3
             else:
-                p1, p2 = 2*self.grid.width//3, self.grid.width
+                p1, p2 = 2*self.grid.width//3, self.grid.width-1
             x = self.random.randrange(p1, p2)
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
@@ -85,8 +87,8 @@ class RobotMission(Model):
         for i in range(num_each_agent):
             create_agent(yellowAgent, "yellow")
 
-        # for i in range(num_each_agent):
-        #     create_agent(redAgent, "red")
+        for i in range(num_each_agent):
+            create_agent(redAgent, "red")
 
         
             
@@ -152,7 +154,8 @@ class RobotMission(Model):
             #agent.deposit(self)
             for element in agent.knowledge["have"]:
                 element.robot = None
-                self.grid.place_agent(element, agent.pos)
+                if not isinstance(agent, redAgent):
+                    self.grid.place_agent(element, agent.pos)
             agent.knowledge["have"] = []
             agent.knowledge["wasteCountHold"] = 0
             agent.knowledge["wasteTypeHold"] = None

@@ -24,7 +24,7 @@ def agent_portrayal(agent):
         portrayal["Color"] = "green"
 
     if isinstance(agent, yellowAgent):
-        portrayal["Color"] = "yellow"
+        portrayal["Color"] = "#FFC03E"
 
     if isinstance(agent, redAgent):
         portrayal["Color"] = "red"
@@ -37,12 +37,27 @@ def agent_portrayal(agent):
         if agent.wasteType == 2:
             portrayal["Color"] = light_red
 
+    if isinstance(agent, Radioactivity):
+        if agent.radioactivity_level == 0:
+            portrayal["Color"] = "#eeeeee"
+
+        if agent.radioactivity_level == 1:
+            portrayal["Color"] = "#bcbcbc"
+
+        if agent.radioactivity_level == 2:
+            portrayal["Color"] = "#999999"
+
+        if agent.radioactivity_level == 10: # waste disposal zone
+            portrayal["Color"] = "#000000"
+
     return portrayal
 
 
 if __name__=="__main__":
-    grid = CanvasGrid(agent_portrayal, 15, 5, 600, 400)
-    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": 12, "height": 4, "num_waste": 4})
+    width = 15
+    height = 5
+    grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
+    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": width, "height": height, "num_waste": 4})
     #server.port = 8540
     import random
     server.port = random.randint(1, 8540)

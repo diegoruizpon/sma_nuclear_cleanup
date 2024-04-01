@@ -1,22 +1,67 @@
 from model import RobotMission
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
+from agents import greenAgent, yellowAgent, redAgent
+from objects import Radioactivity, WasteDisposalZone, NuclearWaste
 
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle",
                  "Filled": "true",
                  "Layer": 1,
-                 "Color": "green",
+                 "Color": "grey",
                  "r": 0.5}
     
-    if agent.unique_id > 2:
-        portrayal["Color"] = "grey"
+    # if agent.unique_id > (25-1) and agent.unique_id < (25+3-1):
+    #     portrayal["Color"] = agent.wasteType#"green"
+    # if agent.unique_id > (25+3-1):
+    #     portrayal["Color"] = "red" 
+    
+    light_green = "#D0F0C0"
+    light_yellow = "#FFE8A1"
+    light_red = "#E8AFAF"
+
+    if isinstance(agent, greenAgent):
+        portrayal["Color"] = "green"
+
+    if isinstance(agent, yellowAgent):
+        portrayal["Color"] = "#FFC03E"
+
+    if isinstance(agent, redAgent):
+        portrayal["Color"] = "red"
+
+    if isinstance(agent, NuclearWaste):
+        if agent.wasteType == 0:
+            portrayal["Color"] = light_green
+        if agent.wasteType == 1:
+            portrayal["Color"] = light_yellow
+        if agent.wasteType == 2:
+            portrayal["Color"] = light_red
+
+    if isinstance(agent, Radioactivity):
+        if agent.radioactivity_level == 0:
+            portrayal["Color"] = "#eeeeee"
+
+        if agent.radioactivity_level == 1:
+            portrayal["Color"] = "#bcbcbc"
+
+        if agent.radioactivity_level == 2:
+            portrayal["Color"] = "#999999"
+
+        if agent.radioactivity_level == 10: # waste disposal zone
+            portrayal["Color"] = "#000000"
+
     return portrayal
 
-grid = CanvasGrid(agent_portrayal, 10, 10, 500, 500)
-server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 3, "width": 10, "height": 10, "num_waste": 2})
-server.port = 8540
 
-server.launch()
+if __name__=="__main__":
+    width = 15
+    height = 5
+    grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
+    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": width, "height": height, "num_waste": 4})
+    #server.port = 8540
+    import random
+    server.port = random.randint(1, 8540)
+
+    server.launch()
 
 

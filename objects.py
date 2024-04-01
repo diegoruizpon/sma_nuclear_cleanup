@@ -3,44 +3,55 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 
 
-
 class Radioactivity(Agent):
-    def __init__(self, unique_id, model, zone):
+    def __init__(self, unique_id, model, zone): #, pos):
         super().__init__(unique_id, model)
         
         # Radioactivity level
-        self.level = self.random.uniform(0, 1.0/3 * zone)
+        self.radioactivity_level = zone
         
         #Position
-        self.pos = (0,0)
+        #self.pos = pos It has to as self. pos to grid
+        self.waste = None
+        self.has_agent = False
+        self.agent = None
+
+    def add_agent(self, agent):
+        self.has_agent = True
+        self.agent = agent
+
+    def remove_agent(self):
+        self.has_agent = False
+        self.agent = None
+
+    def add_waste(self, waste):
+        self.waste = waste
+
+    def remove_waste(self):
+        self.waste = None
         
 
 class WasteDisposalZone(Agent):
-    def __inti__(self, unique_id, model):
+    def __init__(self, unique_id, model): #, pos):
         super().__init__(unique_id, model)
         
         #Position
-        self.pos = (0,0)
-        
+        #self.pos = pos It has to as self. pos to grid
         self.wasteCollected = 0
         
     def step(self):
         #... define the perception-deliberation-action loop here ...
-        
         print("No waste collected yet")
 
+
 class NuclearWaste(Agent):
-    def __inti__(self, unique_id, model):
+    def __init__(self, unique_id, model, wasteType): #, pos):
         super().__init__(unique_id, model)
         
-        # Waste type
-        
-        
-        
-        #Position
-        self.pos = (0,0)
+        self.wasteType = wasteType # Start being green at the begining
+        self.robot = None
+        #self.pos = pos It has to as self. pos to grid
         
     def step(self):
         #... define the perception-deliberation-action loop here ...
-        
-        print("Not collected yet")
+        print("NuclearWaste says: Not collected yet")

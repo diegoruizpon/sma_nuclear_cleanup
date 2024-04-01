@@ -56,13 +56,17 @@ class baseAgent(Agent):
         print(self.knowledge)
         possible_positions = self.model.grid.get_neighborhood(self.knowledge["pos"], moore=False, include_center=False)
         valid_directions = []
+        cant_move_east = self.knowledge["pos_E"]["radioactivity_level"] > self.knowledge["zone_I_can_move"]
         for cell in possible_positions:
             if cell[1] > self.pos[1]:
                 valid_directions.append("N") #north
             elif cell[1] < self.pos[1]:
                 valid_directions.append("S")
             elif cell[0] > self.pos[0]:
-                valid_directions.append("E")
+                if not cant_move_east:
+                    valid_directions.append("E")
+                else:
+                    print(self.knowledge["pos_E"]["radioactivity_level"], self.knowledge["zone_I_can_move"])
             elif cell[0] < self.pos[0]:  
                 valid_directions.append("W")
         action = None
@@ -77,7 +81,7 @@ class baseAgent(Agent):
         # agent has 1 yellow waste -> either deposit or moves east
         elif self.knowledge["wasteTypeHold"] == (self.knowledge["waste_type_I_can_hold"] + 1): # Means he holds a waste that has been transformed
             # there is zone2 at east and agent has 1 yellow waste -> deposit
-            if self.knowledge["pos_W"]["radioactivity_level"] > self.knowledge["zone_I_can_move"]: # WHY Pos_W ??
+            if cant_move_east: # WHY Pos_W ??  --> True, it is not Pos_W, but E, I corrected :)
                 action = "deposit"
             
             # elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2

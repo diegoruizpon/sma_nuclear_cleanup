@@ -42,7 +42,7 @@ def agent_portrayal(agent):
 
 if __name__=="__main__":
     grid = CanvasGrid(agent_portrayal, 15, 5, 600, 400)
-    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": 9, "height": 3, "num_waste": 2})
+    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N": 1, "width": 12, "height": 4, "num_waste": 4})
     #server.port = 8540
     import random
     server.port = random.randint(1, 8540)

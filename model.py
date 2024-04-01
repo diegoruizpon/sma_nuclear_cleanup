@@ -18,11 +18,11 @@ class RobotMission(Model):
             for y in range(self.grid.height):
                 
                 if x <= self.grid.width//3:
-                    a = Radioactivity(y+x*self.grid.height, self, 1)
+                    a = Radioactivity(y+x*self.grid.height, self, 0)
                 elif x <= 2*self.grid.width//3 and x > self.grid.width//3:
-                    a = Radioactivity(y+x*self.grid.height, self, 2)
+                    a = Radioactivity(y+x*self.grid.height, self, 1)
                 else:
-                    a = Radioactivity(y+x*self.grid.height, self, 3)
+                    a = Radioactivity(y+x*self.grid.height, self, 2)
                 self.schedule.add(a)
                 self.grid.place_agent(a, (x, y))
 
@@ -38,12 +38,18 @@ class RobotMission(Model):
             self.grid.place_agent(a, (x, y))
         
         # Create robots
-        def create_agent(AgentClass):
+        def create_agent(AgentClass, color):
             a = AgentClass(i+self.num_waste+self.grid.width*self.grid.height, self)
             self.schedule.add(a)
             
             # Add the agent to a random grid cell
-            x = self.random.randrange(self.grid.width//3)
+            if color == "green":
+                p1, p2 = 0, self.grid.width//3
+            elif color == "yellow":
+                p1, p2 = self.grid.width//3, 2*self.grid.width//3
+            else:
+                p1, p2 = 2*self.grid.width//3, self.grid.width
+            x = self.random.randrange(p1, p2)
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
             a.knowledge["pos"] = (x, y)
@@ -74,13 +80,13 @@ class RobotMission(Model):
         num_each_agent = self.num_agents // 3
         num_each_agent = 1
         for i in range(num_each_agent):
-            create_agent(greenAgent)
+            create_agent(greenAgent, "green")
+
+        for i in range(num_each_agent):
+            create_agent(yellowAgent, "yellow")
 
         # for i in range(num_each_agent):
-        #     create_agent(yellowAgent)
-
-        # for i in range(num_each_agent):
-        #     create_agent(redAgent)
+        #     create_agent(redAgent, "red")
 
         
             

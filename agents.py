@@ -70,6 +70,7 @@ class baseAgent(Agent):
             elif cell[0] < self.pos[0]:  
                 valid_directions.append("W")
 
+        # WITH ERROR
         # pos_list = ["N", "S", "E", "W"]
         # for pos in pos_list:
         #     # if there is a robot in the position, the agent can't move there

@@ -6,9 +6,11 @@ from objects import Radioactivity, WasteDisposalZone, NuclearWaste
 import random
 
 class RobotMission(Model):
-    def __init__(self, N, num_waste , width, height):
+    def __init__(self, N_green, N_yellow, N_red, num_waste , width, height):
         super().__init__()
-        self.num_agents = N
+        self.N_green = N_green
+        self.N_yellow = N_yellow
+        self.N_red = N_red
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
         self.schedule = RandomActivation(self)
@@ -50,7 +52,7 @@ class RobotMission(Model):
             elif color == "yellow":
                 p1, p2 = self.grid.width//3, 2*self.grid.width//3
             else:
-                p1, p2 = 2*self.grid.width//3, self.grid.width-1
+                p1, p2 = 2*self.grid.width//3+1, self.grid.width-1
             x = self.random.randrange(p1, p2)
             y = self.random.randrange(self.grid.height)
             self.grid.place_agent(a, (x, y))
@@ -79,15 +81,13 @@ class RobotMission(Model):
                     if isinstance(element, NuclearWaste):
                         a.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
 
-        num_each_agent = self.num_agents // 3
-        num_each_agent = 1
-        for i in range(num_each_agent):
+        for i in range(N_green):
             create_agent(greenAgent, "green")
 
-        for i in range(num_each_agent):
+        for i in range(N_yellow):
             create_agent(yellowAgent, "yellow")
 
-        for i in range(num_each_agent):
+        for i in range(N_red):
             create_agent(redAgent, "red")
 
         

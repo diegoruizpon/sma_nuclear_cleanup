@@ -31,19 +31,6 @@ class Radioactivity(Agent):
         self.waste = None
         
 
-class WasteDisposalZone(Agent):
-    def __init__(self, unique_id, model): #, pos):
-        super().__init__(unique_id, model)
-        
-        #Position
-        #self.pos = pos It has to as self. pos to grid
-        self.wasteCollected = 0
-        
-    def step(self):
-        #... define the perception-deliberation-action loop here ...
-        print("No waste collected yet")
-
-
 class NuclearWaste(Agent):
     def __init__(self, unique_id, model, wasteType): #, pos):
         super().__init__(unique_id, model)

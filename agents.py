@@ -6,7 +6,7 @@ class baseAgent(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         
-        self.first_step = 0
+        self.first_step = False
         self.robot_type = None
 
         self.knowledge = {
@@ -45,14 +45,14 @@ class baseAgent(Agent):
 
         #self.knowledge
         
-    def update(self, knowledge, percepts):
+    def update(self, percepts):
         self.knowledge = percepts
-        return self.knowledge
     
-    def deliberate(self, knowledge):
+    def deliberate(self):
         # positions = ["pos_robot", "pos_N", "pos_W", "pos_S", "pos_E"]
         # comprehended_list = [f"{pos}, {self.knowledge[pos]['wasteType']}" for pos in positions]
         #print(f"I am {self.unique_id}. My knowledge is {self.knowledge['pos']} : {comprehended_list}")
+        
         print(self.knowledge)
         possible_positions = self.model.grid.get_neighborhood(self.knowledge["pos"], moore=False, include_center=False)
         valid_directions = []
@@ -119,19 +119,20 @@ class baseAgent(Agent):
         
     def step(self):
         percepts = None
-        if self.first_step == 0:
-            action = self.deliberate(self.knowledge)
+        if self.first_step == False:
+            action = self.deliberate()
             percepts = self.model.do(self, action)
-            self.first_step = 1
+            self.first_step = True
         else:
             if not percepts:
                 percepts = self.knowledge
-            self.update(self.knowledge, percepts)
-            action = self.deliberate(self.knowledge)
+            self.update(percepts)
+            action = self.deliberate()
             percepts = self.model.do(self, action)
             #print(f"Agent {self.unique_id} has value {self.knowledge.get('wasteCount')}")   
             #print(f"Agent {self.unique_id} is in {self.pos}")   
         
+
 
 class greenAgent(baseAgent):
     def __init__(self, unique_id, model):
@@ -140,9 +141,7 @@ class greenAgent(baseAgent):
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = self.robot_type
 
-    def deliberate(self, knowledge):
-        action = super().deliberate(knowledge)  
-        return action
+
 
 class yellowAgent(baseAgent):
     def __init__(self, unique_id, model):
@@ -151,9 +150,7 @@ class yellowAgent(baseAgent):
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = self.robot_type
 
-    def deliberate(self, knowledge):
-        action = super().deliberate(knowledge)  
-        return action
+
 
 class redAgent(baseAgent):
     def __init__(self, unique_id, model):
@@ -161,7 +158,3 @@ class redAgent(baseAgent):
         self.robot_type = 2
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = 10
-
-    def deliberate(self, knowledge):
-        action = super().deliberate(knowledge)  
-        return action

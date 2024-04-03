@@ -2,7 +2,7 @@ from mesa import Agent, Model
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from agents import greenAgent, yellowAgent, redAgent
-from objects import Radioactivity, WasteDisposalZone, NuclearWaste
+from objects import Radioactivity, NuclearWaste
 import random
 
 class RobotMission(Model):

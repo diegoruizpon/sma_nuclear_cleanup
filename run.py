@@ -2,7 +2,7 @@ from model import RobotMission
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 from agents import greenAgent, yellowAgent, redAgent
-from objects import Radioactivity, WasteDisposalZone, NuclearWaste
+from objects import Radioactivity, NuclearWaste
 
 def agent_portrayal(agent):
     portrayal = {"Shape": "circle",

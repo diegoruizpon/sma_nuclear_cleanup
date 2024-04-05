@@ -63,44 +63,44 @@ knowledge = {
 
 ### Robot Functions
 
-Robots in this simulation can perform the following functions:
+- **Robots** in this simulation can perform the following functions:
 
-Move: Change position within the allowed zone.
+- **Move** Change position within the allowed zone.
 
-Collect Waste: Pick up waste if the robot's capacity allows.
+- **Collect** Waste: Pick up waste if the robot's capacity allows.
 
-Transform Waste: Convert collected waste into a different type, if applicable.
+- **Transform Waste** Convert collected waste into a different type, if applicable.
 
-Deposit Waste: Place waste in a designated zone or facility.
+- **Deposit Waste** Place waste in a designated zone or facility.
 
 ### Model Restrictions
 
-No two agents can occupy the same cell. The deliberate() function must avoid cells occupied by another robot.
+- No two agents can occupy the same cell. The deliberate() function must avoid cells occupied by another robot.
 
-Green robots are restricted to the green (low radioactivity) zone.
+- Green robots are restricted to the green (low radioactivity) zone.
 
-Yellow robots can operate in both green and yellow (medium radioactivity) zones.
+- Yellow robots can operate in both green and yellow (medium radioactivity) zones.
 
-Red robots have access to all zones.
+- Red robots have access to all zones.
 
-Waste is initially placed randomly within the environment and can be of different types, corresponding to 
+- Waste is initially placed randomly within the environment and can be of different types, corresponding to 
 the robot that can handle it.
 
 ### Procedure with reasoning and without communication 
 
 Determine potential movement blocks based on robot type and zone limitations.
 
-If a red robot holds a red waste and can move east, it should do so. If not, deposit the waste.
+- If a red robot holds a red waste and can move east, it should do so. If not, deposit the waste.
 
-If a robot holds waste that can be transformed and is in a block with similar waste, transform it.
+- If a robot holds waste that can be transformed and is in a block with similar waste, transform it.
 
-If a robot can transform the waste it holds but cannot move east, it should deposit the waste.
+- If a robot can transform the waste it holds but cannot move east, it should deposit the waste.
 
-If a robot is on top of waste, it should collect it.
+- If a robot is on top of waste, it should collect it.
 
-If there's waste in the neighborhood, move towards the waste.
+- If there's waste in the neighborhood, move towards the waste.
 
-Otherwise, move randomly, avoiding cells with other robots.
+- Otherwise, move randomly, avoiding cells with other robots.
 
 
 ## Credits

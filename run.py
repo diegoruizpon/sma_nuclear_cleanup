@@ -1,3 +1,15 @@
+'''
+
+Created by Diego Ruiz, Joao Pedro, Lucas Vitoriano, Francisco García
+
+Date of creation: 25/03/2024
+
+Team number: 4
+
+
+'''
+
+
 from model import RobotMission
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer

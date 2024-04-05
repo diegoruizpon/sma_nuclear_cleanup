@@ -82,7 +82,19 @@ def agent_portrayal(agent):
             portrayal["Color"] = "#FFC03E"
 
         if isinstance(agent, redAgent):
-            portrayal["Color"] = "red"
+            
+            portrayal = {
+                "Shape": "ressources/red_robot.png",
+                "scale": 0.9,
+                "Layer": 2,
+                
+            }
+
+            
+             
+            
+            
+            #portrayal["Color"] = "red"
 
         if isinstance(agent, NuclearWaste):
             if agent.wasteType == 0:

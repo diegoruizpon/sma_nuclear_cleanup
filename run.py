@@ -17,50 +17,99 @@ from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
 
 def agent_portrayal(agent):
-    portrayal = {"Shape": "circle",
+    
+    if isinstance(agent, Radioactivity):
+        
+        if agent.radioactivity_level == 0:
+            portrayal = {"Shape": "rect",
                  "Filled": "true",
                  "Layer": 1,
-                 "Color": "grey",
-                 "r": 0.5}
-    
-    # if agent.unique_id > (25-1) and agent.unique_id < (25+3-1):
-    #     portrayal["Color"] = agent.wasteType#"green"
-    # if agent.unique_id > (25+3-1):
-    #     portrayal["Color"] = "red" 
-    
-    light_green = "#D0F0C0"
-    light_yellow = "#FFE8A1"
-    light_red = "#E8AFAF"
-
-    if isinstance(agent, greenAgent):
-        portrayal["Color"] = "green"
-
-    if isinstance(agent, yellowAgent):
-        portrayal["Color"] = "#FFC03E"
-
-    if isinstance(agent, redAgent):
-        portrayal["Color"] = "red"
-
-    if isinstance(agent, NuclearWaste):
-        if agent.wasteType == 0:
-            portrayal["Color"] = light_green
-        if agent.wasteType == 1:
-            portrayal["Color"] = light_yellow
-        if agent.wasteType == 2:
-            portrayal["Color"] = light_red
-
-    if isinstance(agent, Radioactivity):
-        if agent.radioactivity_level == 0:
-            portrayal["Color"] = "#eeeeee"
-
+                 "Color": "#eeeeee",
+                 "w": 1,
+                 "h": 1,
+                 }
+            
+            
         if agent.radioactivity_level == 1:
-            portrayal["Color"] = "#bcbcbc"
-
+            portrayal = {"Shape": "rect",
+                 "Filled": "true",
+                 "Layer": 1,
+                 "Color": "#bcbcbc",
+                 "w": 1,
+                 "h": 1,
+                 }
+            
         if agent.radioactivity_level == 2:
-            portrayal["Color"] = "#777777"
-
+            portrayal = {"Shape": "rect",
+                 "Filled": "true",
+                 "Layer": 1,
+                 "Color": "#777777",
+                 "w": 1,
+                 "h": 1,
+                 }
+            
+            
         if agent.radioactivity_level == 10: # waste disposal zone
-            portrayal["Color"] = "#000000"
+            
+            portrayal = {"Shape": "rect",
+                 "Filled": "true",
+                 "Layer": 1,
+                 "Color": "#000000",
+                 "w": 1,
+                 "h": 1,
+                 }      
+        
+    else:
+        portrayal = {"Shape": "circle",
+                    "Filled": "true",
+                    "Layer": 2,
+                    "Color": "grey",
+                    "r": 0.5}
+        
+        # if agent.unique_id > (25-1) and agent.unique_id < (25+3-1):
+        #     portrayal["Color"] = agent.wasteType#"green"
+        # if agent.unique_id > (25+3-1):
+        #     portrayal["Color"] = "red" 
+        
+        light_green = "#D0F0C0"
+        light_yellow = "#FFE8A1"
+        light_red = "#E8AFAF"
+
+        if isinstance(agent, greenAgent):
+            portrayal["Color"] = "green"
+
+        if isinstance(agent, yellowAgent):
+            portrayal["Color"] = "#FFC03E"
+
+        if isinstance(agent, redAgent):
+            portrayal["Color"] = "red"
+
+        if isinstance(agent, NuclearWaste):
+            if agent.wasteType == 0:
+                portrayal["Color"] = light_green
+            if agent.wasteType == 1:
+                portrayal["Color"] = light_yellow
+            if agent.wasteType == 2:
+                portrayal["Color"] = light_red
+
+        if isinstance(agent, Radioactivity):
+            # if agent.radioactivity_level == 0:
+            #     portrayal["Color"] = "#eeeeee"
+            #     portrayal["Shape"] = "rect"
+            #     portrayal["Layer"] = "0"
+
+            # if agent.radioactivity_level == 1:
+            #     portrayal["Color"] = "#bcbcbc"
+            #     portrayal["Shape"] = "rect"
+            #     portrayal["Layer"] = "0"
+
+            # if agent.radioactivity_level == 2:
+            #     portrayal["Color"] = "#777777"
+            #     portrayal["Shape"] = "rect"
+            #     portrayal["Layer"] = "0"
+
+            if agent.radioactivity_level == 10: # waste disposal zone
+                portrayal["Color"] = "#000000"
 
     return portrayal
 

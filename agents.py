@@ -13,9 +13,10 @@ Team number: 4
 
 from mesa import Agent
 import random
+from communication.agent.CommunicatingAgent import CommunicatingAgent
 
 
-class baseAgent(Agent):
+class baseAgent(CommunicatingAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         

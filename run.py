@@ -15,6 +15,7 @@ from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
 from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
+import random
 
 def agent_portrayal(agent):
     
@@ -24,7 +25,7 @@ def agent_portrayal(agent):
             portrayal = {"Shape": "rect",
                  "Filled": "true",
                  "Layer": 1,
-                 "Color": "#eeeeee",
+                 "Color": "#238823",
                  "w": 1,
                  "h": 1,
                  }
@@ -34,7 +35,7 @@ def agent_portrayal(agent):
             portrayal = {"Shape": "rect",
                  "Filled": "true",
                  "Layer": 1,
-                 "Color": "#bcbcbc",
+                 "Color": "#FFBF00",
                  "w": 1,
                  "h": 1,
                  }
@@ -43,7 +44,7 @@ def agent_portrayal(agent):
             portrayal = {"Shape": "rect",
                  "Filled": "true",
                  "Layer": 1,
-                 "Color": "#777777",
+                 "Color": "#D2222D",
                  "w": 1,
                  "h": 1,
                  }
@@ -76,15 +77,29 @@ def agent_portrayal(agent):
         light_red = "#E8AFAF"
 
         if isinstance(agent, greenAgent):
-            portrayal["Color"] = "green"
+            
+            portrayal = {
+                "Shape": "ressources/green_black_rob.png",
+                "scale": 0.9,
+                "Layer": 2,
+                
+            }
+            #portrayal["Color"] = "green"
 
         if isinstance(agent, yellowAgent):
-            portrayal["Color"] = "#FFC03E"
+            
+            portrayal = {
+                "Shape": "ressources\yellow_black_rob.png",
+                "scale": 0.9,
+                "Layer": 2,
+                
+            }
+            #portrayal["Color"] = "#FFC03E"
 
         if isinstance(agent, redAgent):
             
             portrayal = {
-                "Shape": "ressources/red_robot.png",
+                "Shape": "ressources/red_black_rob.png",
                 "scale": 0.9,
                 "Layer": 2,
                 
@@ -98,27 +113,16 @@ def agent_portrayal(agent):
 
         if isinstance(agent, NuclearWaste):
             if agent.wasteType == 0:
-                portrayal["Color"] = light_green
+                portrayal["Shape"] = "ressources\green_waste.png"
+                #portrayal["Color"] = light_green
             if agent.wasteType == 1:
-                portrayal["Color"] = light_yellow
+                
+                portrayal["Shape"] = "ressources\yellow_waste.png"
             if agent.wasteType == 2:
-                portrayal["Color"] = light_red
+                portrayal["Shape"] = r"ressources\red_waste.png"
 
         if isinstance(agent, Radioactivity):
-            # if agent.radioactivity_level == 0:
-            #     portrayal["Color"] = "#eeeeee"
-            #     portrayal["Shape"] = "rect"
-            #     portrayal["Layer"] = "0"
-
-            # if agent.radioactivity_level == 1:
-            #     portrayal["Color"] = "#bcbcbc"
-            #     portrayal["Shape"] = "rect"
-            #     portrayal["Layer"] = "0"
-
-            # if agent.radioactivity_level == 2:
-            #     portrayal["Color"] = "#777777"
-            #     portrayal["Shape"] = "rect"
-            #     portrayal["Layer"] = "0"
+            
 
             if agent.radioactivity_level == 10: # waste disposal zone
                 portrayal["Color"] = "#000000"
@@ -132,7 +136,7 @@ if __name__=="__main__":
     grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
     server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
     #server.port = 8540
-    import random
+    
     server.port = random.randint(1, 8540)
 
     server.launch()

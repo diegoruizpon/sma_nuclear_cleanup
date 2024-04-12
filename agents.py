@@ -56,8 +56,8 @@ class baseAgent(Agent):
             },
         }
 
-        #self.knowledge
-        
+        #self. knowledge
+        #teste
     def update(self, percepts):
         self.knowledge = percepts
     

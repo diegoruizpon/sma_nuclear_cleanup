@@ -18,6 +18,7 @@ from mesa.space import MultiGrid
 from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
 import random
+from communication import Message, MessageService, MessagePerformative
 
 class RobotMission(Model):
     def __init__(self, N_green, N_yellow, N_red, num_waste , width, height):
@@ -28,6 +29,7 @@ class RobotMission(Model):
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
         self.schedule = RandomActivation(self)
+        self.__messages_service = MessageService(self.schedule)
 
         # Create Radioactivity
         for x in range(self.grid.width):
@@ -196,6 +198,7 @@ class RobotMission(Model):
         return percepts
         
     def step(self):
+        self.__messages_service.dispatch_messages()
         self.schedule.step()
 
     # Assuming 'model' is your model instance and it has attributes 'schedule' for the scheduler

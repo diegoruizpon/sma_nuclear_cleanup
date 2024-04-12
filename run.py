@@ -67,10 +67,7 @@ def agent_portrayal(agent):
                     "Color": "grey",
                     "r": 0.5}
         
-        # if agent.unique_id > (25-1) and agent.unique_id < (25+3-1):
-        #     portrayal["Color"] = agent.wasteType#"green"
-        # if agent.unique_id > (25+3-1):
-        #     portrayal["Color"] = "red" 
+        
         
         light_green = "#D0F0C0"
         light_yellow = "#FFE8A1"
@@ -84,7 +81,7 @@ def agent_portrayal(agent):
                 "Layer": 2,
                 
             }
-            #portrayal["Color"] = "green"
+            
 
         if isinstance(agent, yellowAgent):
             
@@ -94,7 +91,7 @@ def agent_portrayal(agent):
                 "Layer": 2,
                 
             }
-            #portrayal["Color"] = "#FFC03E"
+            
 
         if isinstance(agent, redAgent):
             
@@ -105,20 +102,18 @@ def agent_portrayal(agent):
                 
             }
 
-            
-             
-            
-            
-            #portrayal["Color"] = "red"
 
         if isinstance(agent, NuclearWaste):
             if agent.wasteType == 0:
+                
                 portrayal["Shape"] = "ressources\green_waste.png"
-                #portrayal["Color"] = light_green
+                
             if agent.wasteType == 1:
                 
                 portrayal["Shape"] = "ressources\yellow_waste.png"
+                
             if agent.wasteType == 2:
+                
                 portrayal["Shape"] = r"ressources\red_waste.png"
 
         if isinstance(agent, Radioactivity):
@@ -158,7 +153,6 @@ if __name__=="__main__":
     model_params["width"] = width
     model_params["height"] = height
     grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
-    #server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
     server = ModularServer(RobotMission, [grid], "Robot Mission", model_params)
     
     #server.port = 8540

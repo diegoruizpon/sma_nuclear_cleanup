@@ -47,9 +47,9 @@ class RobotMission(Model):
         for x in range(self.grid.width):
             for y in range(self.grid.height):
                 
-                if x <= self.grid.width//3:
+                if x <= self.grid.width//3 - 1:
                     a = Radioactivity(y+x*self.grid.height, self, 0)
-                elif x <= 2*self.grid.width//3 and x > self.grid.width//3:
+                elif x < 2*self.grid.width//3 and x >= self.grid.width//3:
                     a = Radioactivity(y+x*self.grid.height, self, 1)
                 elif x == self.grid.width-1: # waste disposal zone
                     a = Radioactivity(y+x*self.grid.height, self, 10)                

@@ -9,7 +9,7 @@ Team number: 4
 
 '''
 
-
+import mesa
 from model import RobotMission
 from mesa.visualization.modules import CanvasGrid
 from mesa.visualization.ModularVisualization import ModularServer
@@ -130,11 +130,34 @@ def agent_portrayal(agent):
     return portrayal
 
 
+model_params = {
+    # Parameter definition for the model 
+    
+    "title": mesa.visualization.StaticText("Robot Mission"),
+    "N_green": mesa.visualization.Slider(
+        "Number of green robots", 1, 1, 10, 2
+    ),
+    "N_yellow": mesa.visualization.Slider(
+        "Number of yellow robots", 1, 1, 10, 2
+    ),
+    "N_red": mesa.visualization.Slider(
+        "Number of red robots", 1, 1, 10, 2
+    ),
+    "width": 15,
+    "height": 15,
+    "num_waste": mesa.visualization.Slider(
+        "Number of green waste", 1, 1, 10, 2
+    ),
+}
+
+
 if __name__=="__main__":
     width = 15
     height = 15
     grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
-    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
+    #server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
+    server = ModularServer(RobotMission, [grid], "Robot Mission", model_params)
+    
     #server.port = 8540
     
     server.port = random.randint(1, 8540)

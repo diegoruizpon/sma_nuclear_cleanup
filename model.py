@@ -12,12 +12,14 @@ Team number: 4
 
 
 
-from mesa import Agent, Model
+from mesa import Agent, Model, DataCollector
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
 import random
+
+from schedule import RandomActivationByTypeFiltered
 
 class RobotMission(Model):
     def __init__(self, N_green, N_yellow, N_red, num_waste , width, height):
@@ -27,7 +29,19 @@ class RobotMission(Model):
         self.N_red = N_red
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
-        self.schedule = RandomActivation(self)
+        #self.schedule = RandomActivation(self)
+        self.schedule = RandomActivationByTypeFiltered(self)
+        self.datacollector = DataCollector(
+            {
+                "NuclearWaste_green": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.wasteType == 0),
+                "NuclearWaste_yellow": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.wasteType == 1),
+                "NuclearWaste_red": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.wasteType == 2
+                ),
+            }
+        )
 
         # Create Radioactivity
         for x in range(self.grid.width):
@@ -108,6 +122,7 @@ class RobotMission(Model):
             
             
         self.running = True
+        self.datacollector.collect(self)
         
     def do(self, agent, action):
         percepts = agent.knowledge
@@ -197,6 +212,7 @@ class RobotMission(Model):
         
     def step(self):
         self.schedule.step()
+        self.datacollector.collect(self)
 
     # Assuming 'model' is your model instance and it has attributes 'schedule' for the scheduler
 # and 'space' for the space where agents are placed (like a Grid or Network).

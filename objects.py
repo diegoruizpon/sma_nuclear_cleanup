@@ -20,7 +20,7 @@ class Radioactivity(Agent):
     def __init__(self, unique_id, model, zone): #, pos):
         super().__init__(unique_id, model)
         
-        # Radioactivity level
+        # Radioactivity level 
         self.radioactivity_level = zone
         
         #Position
@@ -51,6 +51,13 @@ class NuclearWaste(Agent):
         self.wasteType = wasteType # Start being green at the begining
         self.robot = None
         #self.pos = pos It has to as self. pos to grid
+        # self.is_green = self.is_yellow = self.is_red = False
+        # if wasteType == 0:
+        #     self.is_green = True
+        # elif wasteType == 1:
+        #     self.is_yellow = True
+        # elif wasteType == 2:
+        #     self.is_red = True
         
     def step(self):
         #... define the perception-deliberation-action loop here ...

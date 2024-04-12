@@ -8,7 +8,7 @@ Team number: 4
 
 
 '''
-
+from skimage.morphology import skeletonize
 
 
 from mesa import Agent
@@ -154,8 +154,6 @@ class greenAgent(baseAgent):
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = self.robot_type
 
-
-
 class yellowAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -163,11 +161,10 @@ class yellowAgent(baseAgent):
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = self.robot_type
 
-
-
 class redAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.robot_type = 2
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = 10
+

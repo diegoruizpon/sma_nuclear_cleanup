@@ -60,5 +60,6 @@ class NuclearWaste(Agent):
         #     self.is_red = True
         
     def step(self):
+        pass
         #... define the perception-deliberation-action loop here ...
-        print("NuclearWaste says: Not collected yet")
+        #print("NuclearWaste says: Not collected yet")

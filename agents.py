@@ -65,7 +65,7 @@ class baseAgent(Agent):
         # comprehended_list = [f"{pos}, {self.knowledge[pos]['wasteType']}" for pos in positions]
         #print(f"I am {self.unique_id}. My knowledge is {self.knowledge['pos']} : {comprehended_list}")
         
-        print(self.knowledge)
+        #print(self.knowledge)
         possible_positions = self.model.grid.get_neighborhood(self.knowledge["pos"], moore=False, include_center=False)
         valid_directions = []
         cant_move_east = self.knowledge["pos_E"]["radioactivity_level"] > self.knowledge["zone_I_can_move"]
@@ -78,7 +78,8 @@ class baseAgent(Agent):
                 if not cant_move_east:
                     valid_directions.append("E")
                 else:
-                    print(self.knowledge["pos_E"]["radioactivity_level"], self.knowledge["zone_I_can_move"])
+                    pass
+                    #print(self.knowledge["pos_E"]["radioactivity_level"], self.knowledge["zone_I_can_move"])
             elif cell[0] < self.pos[0]:  
                 valid_directions.append("W")
 
@@ -126,7 +127,7 @@ class baseAgent(Agent):
                     break
         if action == None:
             action = f"move_{random.choice(valid_directions)}"
-        print('action: ', action)
+        #print('action: ', action)
         return action 
         
     def step(self):

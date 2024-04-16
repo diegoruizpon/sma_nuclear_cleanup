@@ -152,6 +152,16 @@ model_params = {
     ),
 }
 
+params = {"width": 10, "height": 10, "N": range(5, 100, 5)} # range(start, stop, step)
+model_params_simulation = {
+    "N_green": 2,
+    "N_yellow": 2,
+    "N_red": 2,
+    "width": 15,
+    "height": 15,
+    "num_waste": range(10, 15)
+}
+
 
 if __name__=="__main__":
 
@@ -179,13 +189,41 @@ if __name__=="__main__":
         ]
     )
 
+    results = mesa.batch_run(
+        RobotMission,
+        parameters=model_params_simulation,
+        iterations=5,
+        max_steps=100,
+        number_processes=1,
+        data_collection_period=1,
+        display_progress=True,
+    )
+    import pandas as pd
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    results_df = pd.DataFrame(results)
+    print(results_df.head())
 
-    server = ModularServer(RobotMission, [grid, chart_element0, chart_element1], "Robot Mission", model_params)
+    g = sns.lineplot(
+        data=results_df,
+        x="iteration",
+        y="NuclearWaste_red",
+        hue="num_waste",
+        errorbar=("ci", 95),
+        palette="tab10",
+    )
+    g.figure.set_size_inches(8, 4)
+    plot_title = "Gini coefficient for different population sizes\n(mean over 100 runs, with 95% confidence interval)"
+    g.set(title=plot_title, ylabel="Gini coefficient");
+    plt.show()
 
-    #server.port = 8540
+
+    # server = ModularServer(RobotMission, [grid, chart_element0, chart_element1], "Robot Mission", model_params)
+
+    # #server.port = 8540
     
-    server.port = random.randint(1, 8540)
+    # server.port = random.randint(1, 8540)
 
-    server.launch()
+    # server.launch()
 
 

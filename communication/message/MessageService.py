@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 
 class MessageService:
     """MessageService class.
@@ -22,13 +21,13 @@ class MessageService:
     def __init__(self, scheduler, instant_delivery=True):
         """ Create a new MessageService object.
         """
-        if MessageService.__instance is not None:
-            raise Exception("This class is a singleton!")
-        else:
-            MessageService.__instance = self
-            self.__scheduler = scheduler
-            self.__instant_delivery = instant_delivery
-            self.__messages_to_proceed = []
+        #if MessageService.__instance is not None:
+        #    #raise Exception("This class is a singleton!")
+        #else:
+        MessageService.__instance = self
+        self.__scheduler = scheduler
+        self.__instant_delivery = instant_delivery
+        self.__messages_to_proceed = []
 
     def set_instant_delivery(self, instant_delivery):
         """ Set the instant delivery parameter.
@@ -46,7 +45,7 @@ class MessageService:
     def dispatch_message(self, message):
         """ Dispatch the message to the right agent.
         """
-        self.find_agent_from_name(message.get_dest()).receive_message(message)
+        self.find_agent_from_type(message.get_dest()).receive_message(message)
 
     def dispatch_messages(self):
         """ Proceed each message received by the message service.
@@ -57,9 +56,19 @@ class MessageService:
 
         self.__messages_to_proceed.clear()
 
-    def find_agent_from_name(self, agent_name):
+    def find_agent_from_id(self, agent_name):
         """ Return the agent according to the agent name given.
         """
         for agent in self.__scheduler.agents:
             if agent.get_name() == agent_name:
                 return agent
+            
+    def find_agent_from_type(self, agent_type):
+        """ Return the agent according to the agent name given.
+        """
+        for agent in self.__scheduler.agents:
+            if hasattr(agent,"get_count_waste") and agent.get_robot_type() == agent_type:
+                print("70")
+                if agent.get_count_waste() == 0:
+                    print("71")
+                    return agent  

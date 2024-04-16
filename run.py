@@ -66,10 +66,10 @@ def agent_portrayal(agent):
 
 
 if __name__=="__main__":
-    width = 15
-    height = 15
+    width = 10
+    height = 10
     grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
-    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
+    server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 16})
     #server.port = 8540
     import random
     server.port = random.randint(1, 8540)

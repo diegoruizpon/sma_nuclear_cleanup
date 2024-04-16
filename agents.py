@@ -10,7 +10,6 @@ Team number: 4
 '''
 from skimage.morphology import skeletonize
 
-
 from mesa import Agent
 import random
 

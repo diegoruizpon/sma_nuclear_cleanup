@@ -154,37 +154,34 @@ model_params = {
 
 
 if __name__=="__main__":
-<<<<<<< HEAD
 
     width = 15
     height = 15
 
-    model_params = {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8}
+    #model_params = {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8}
+    model_params["width"] = width
+    model_params["height"] = height
     grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
 
 
-    chart_element = mesa.visualization.ChartModule(
+    chart_element0 = mesa.visualization.ChartModule(
         [
             {"Label": "NuclearWaste_green", "Color": "#D0F0C0"},
             {"Label": "NuclearWaste_yellow", "Color": "#FFE8A1"},
             {"Label": "NuclearWaste_red", "Color": "#E8AFAF"},
         ]
     )
+    chart_element1 = mesa.visualization.ChartModule(
+        [
+            {"Label": "NuclearWaste_taked_by_green", "Color": "#D0F0C0"},
+            {"Label": "NuclearWaste_yellow", "Color": "#FFE8A1"},
+            {"Label": "NuclearWaste_red", "Color": "#E8AFAF"},
+        ]
+    )
 
 
-    server = ModularServer(RobotMission, [grid, chart_element], "Robot Mission", model_params)
+    server = ModularServer(RobotMission, [grid, chart_element0, chart_element1], "Robot Mission", model_params)
 
-=======
-    width = 16
-    height = 15
-    
-    model_params["width"] = width
-    model_params["height"] = height
-    grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
-    #server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
-    server = ModularServer(RobotMission, [grid], "Robot Mission", model_params)
-    
->>>>>>> origin/main
     #server.port = 8540
     
     server.port = random.randint(1, 8540)

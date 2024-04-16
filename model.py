@@ -38,8 +38,13 @@ class RobotMission(Model):
                 "NuclearWaste_yellow": lambda m: m.schedule.get_type_count(
                     NuclearWaste, lambda x: x.wasteType == 1),
                 "NuclearWaste_red": lambda m: m.schedule.get_type_count(
-                    NuclearWaste, lambda x: x.wasteType == 2
-                ),
+                    NuclearWaste, lambda x: x.wasteType == 2),
+                "NuclearWaste_taked_by_green": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 0),
+                "NuclearWaste_taked_by_yellow": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 1),
+                "NuclearWaste_taked_by_red": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 2),
             }
         )
 

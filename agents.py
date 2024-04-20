@@ -31,6 +31,7 @@ class baseAgent(CommunicatingAgent):
             "wasteCountHold": 0,
             "wasteTypeHold": 0,
             "have": [],
+            "waste_pos": (0,0),
             "pos_robot": {
                 "radioactivity_level": None,
                 "wasteType": None,
@@ -81,9 +82,13 @@ class baseAgent(CommunicatingAgent):
         if messages:
             for message in messages:
                 if message.get_performative() == MessagePerformative.SEND_WASTE:
-                    self.knowledge["pos"] = message.get_content()
-                    print("I received a waste")
+                    self.knowledge["waste_pos"] = message.get_content()
+                    if self.knowledge["wasteCountHold"] == 0:
+                        return "move_to_waste"
                     
+        if  self.knowledge["wasteCountHold"] == 0 and self.knowledge["waste_pos"] != None:
+            return "move_to_waste"
+        
         cant_move_east = self.knowledge["pos_E"]["radioactivity_level"] > self.knowledge["zone_I_can_move"]
         for cell in possible_positions:
             if cell[1] > self.pos[1]:
@@ -113,11 +118,9 @@ class baseAgent(CommunicatingAgent):
         elif self.knowledge["wasteTypeHold"] == (self.knowledge["waste_type_I_can_hold"] + 1): # Means he holds a waste that has been transformed
             # there is zone2 at east and agent has 1 yellow waste -> deposit
             if cant_move_east: # WHY Pos_W ??  --> True, it is not Pos_W, but E, I corrected :)
-                print("I am sending a waste")
                 action = "deposit"
+                print(self.robot_type + 1)
                 self.send_message(Message(self.unique_id, self.robot_type + 1, MessagePerformative.SEND_WASTE, self.knowledge["pos"])) 
-                print("I am sending a waste 2")
-            
             # elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2
             #     action = "deposit"
             # he has 1 yellow waste -> move right

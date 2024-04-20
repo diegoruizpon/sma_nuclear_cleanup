@@ -132,6 +132,10 @@ class RobotMission(Model):
                 y -= 1
             elif "W" in action:
                 x -= 1
+            elif "to_waste" in action:
+                x, y = percepts["waste_pos"]
+                agent.knowledge["waste_pos"] = None
+
             self.grid.move_agent(agent, (x, y))
             agent.knowledge["pos"] = (x, y)
 

@@ -21,7 +21,6 @@ class baseAgent(Agent):
         self.first_step = False
         self.robot_type = None
         self.time_without_waste = 0
-        self.times_without_waste = []
 
         self.knowledge = {
             "waste_type_I_can_hold": self.robot_type,
@@ -95,7 +94,6 @@ class baseAgent(Agent):
         #         valid_directions.remove(pos)
         #         print(self.knowledge)
 
-
         action = None
 
         if self.knowledge["waste_type_I_can_hold"] == 2 and self.knowledge["wasteCountHold"] == 1:
@@ -125,7 +123,6 @@ class baseAgent(Agent):
         # there is a green waste in agent position -> collect
         
         elif self.knowledge["pos_robot"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:
-            self.times_without_waste.append(self.time_without_waste)
             self.time_without_waste = 0
             action = "collect"
         else:

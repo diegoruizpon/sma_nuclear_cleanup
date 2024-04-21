@@ -186,9 +186,9 @@ if __name__=="__main__":
 
 
 
-    from tests_parameters import model_params_simulation_height, model_params_simulation_width, model_params_simulation_num_waste
+    from tests_parameters import params_simulation_height, params_simulation_width, params_simulation_num_waste
     # There must be a coherence between chosen_sumulation and labels_hue
-    chosen_simulation = model_params_simulation_width # model_params_simulation_height  model_params_simulation_num_waste
+    chosen_simulation = params_simulation_width # params_simulation_height # params_simulation_num_waste
     labels_hue = 'width' # "height" # 'num_waste'
 
     results = mesa.batch_run(

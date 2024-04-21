@@ -17,6 +17,7 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
+from communication.message.MessageService import MessageService
 import random
 
 from communication.agent.CommunicatingAgent import CommunicatingAgent
@@ -210,6 +211,7 @@ class RobotMission(Model):
         return percepts
         
     def step(self):
+        self.__messages_service.dispatch_messages()
         self.__messages_service.dispatch_messages()
         self.schedule.step()
 

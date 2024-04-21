@@ -70,7 +70,6 @@ class MessageService:
         """
         first_agent = None
         for agent in self.__scheduler.agents:
-            print("number of agents = ", len(self.__scheduler.agents))
             if hasattr(agent,"get_count_waste") and agent.get_robot_type() == agent_type:
                 first_agent = agent
                 if agent.get_count_waste() == 0:

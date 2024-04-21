@@ -36,7 +36,7 @@ class RobotMission(Model):
         self.N_red = N_red
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
-        
+
         self.schedule = RandomActivationByTypeFiltered(self)
         self.__messages_service = MessageService(self.schedule)
 
@@ -161,7 +161,6 @@ class RobotMission(Model):
             elif "to_waste" in action:
                 x, y = percepts["waste_pos"]
                 agent.knowledge["waste_pos"] = None
-                print("tp to waste")
 
             self.grid.move_agent(agent, (x, y))
             agent.knowledge["pos"] = (x, y)
@@ -188,7 +187,6 @@ class RobotMission(Model):
                         agent.knowledge[f"pos_{direction}"]["agent"] = True
                     if isinstance(element, NuclearWaste):
                         if element.robot == None:
-                            #print("--"*10)
                             agent.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
              
         elif action == "collect":
@@ -223,12 +221,8 @@ class RobotMission(Model):
             # Here i have also to destroy one of the elements 
             agent.knowledge["wasteCountHold"] = 1
             elements = agent.knowledge["have"]
-            # for element in elements:
-            #     print(element)
             self.schedule.remove(elements[0])
             elements[0].robot = None
-            # if elements[1].wasteType == "green":
-            #     elements[1].wasteType = "yellow"
             elements[1].wasteType += 1
 
             agent.knowledge["wasteTypeHold"] = elements[1].wasteType

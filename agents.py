@@ -31,7 +31,7 @@ class baseAgent(CommunicatingAgent):
             "wasteCountHold": 0,
             "wasteTypeHold": 0,
             "have": [],
-            "waste_pos": (0,0),
+            "waste_pos": None,
             "pos_robot": {
                 "radioactivity_level": None,
                 "wasteType": None,
@@ -82,13 +82,11 @@ class baseAgent(CommunicatingAgent):
         #Dealing with the messages 
         messages = self.get_new_messages()
 
-        if messages:
-            for message in messages:
-                if message.get_performative() == MessagePerformative.SEND_WASTE:
-                    self.knowledge["waste_pos"] = message.get_content()
-                    print("Waste position received")
-                    if self.knowledge["wasteCountHold"] == 0:
-                        return "move_to_waste"
+        for message in messages:
+            if message.get_performative() == MessagePerformative.SEND_WASTE:
+                self.knowledge["waste_pos"] = message.get_content()
+                if self.knowledge["wasteTypeHold"] != 2 and self.knowledge["wasteCountHold"] < 2:
+                    return "move_to_waste"
                     
         if  self.knowledge["wasteCountHold"] == 0 and self.knowledge["waste_pos"] != None:
             return "move_to_waste"
@@ -127,7 +125,6 @@ class baseAgent(CommunicatingAgent):
             if cant_move_east: # WHY Pos_W ??  --> True, it is not Pos_W, but E, I corrected :)
                 self.time_without_waste = 0
                 action = "deposit"
-                print("sending msg")
                 self.send_message(Message(self.unique_id, self.robot_type + 1, MessagePerformative.SEND_WASTE, self.knowledge["pos"])) 
 
             elif "E" in valid_directions:
@@ -149,7 +146,6 @@ class baseAgent(CommunicatingAgent):
                     break
 
         if action == None:
-            print("=====================================================================================")
             action = f"move_{random.choice(valid_directions)}"
         return action 
         

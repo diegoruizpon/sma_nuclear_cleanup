@@ -17,17 +17,28 @@ from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
+from communication.message.MessageService import MessageService
 import random
+
+from communication.agent.CommunicatingAgent import CommunicatingAgent
+from communication.mailbox.Mailbox import Mailbox
+from communication.message.Message import Message
+from communication.message.MessagePerformative import MessagePerformative
+from communication.message.MessageService import MessageService
 
 class RobotMission(Model):
     def __init__(self, N_green, N_yellow, N_red, num_waste , width, height):
         super().__init__()
+        self.schedule = RandomActivation(self)
+        print("Model created")
+        self.__messages_service = MessageService(self.schedule)
+         
         self.N_green = N_green
         self.N_yellow = N_yellow
         self.N_red = N_red
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
-        self.schedule = RandomActivation(self)
+
 
         # Create Radioactivity
         for x in range(self.grid.width):
@@ -122,6 +133,10 @@ class RobotMission(Model):
                 y -= 1
             elif "W" in action:
                 x -= 1
+            elif "to_waste" in action:
+                x, y = percepts["waste_pos"]
+                agent.knowledge["waste_pos"] = None
+
             self.grid.move_agent(agent, (x, y))
             agent.knowledge["pos"] = (x, y)
 
@@ -196,6 +211,8 @@ class RobotMission(Model):
         return percepts
         
     def step(self):
+        self.__messages_service.dispatch_messages()
+        self.__messages_service.dispatch_messages()
         self.schedule.step()
 
     # Assuming 'model' is your model instance and it has attributes 'schedule' for the scheduler

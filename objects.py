@@ -54,4 +54,5 @@ class NuclearWaste(Agent):
         
     def step(self):
         #... define the perception-deliberation-action loop here ...
-        print("NuclearWaste says: Not collected yet")
+
+        pass

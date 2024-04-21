@@ -17,6 +17,13 @@ from agents import greenAgent, yellowAgent, redAgent
 from objects import Radioactivity, NuclearWaste
 import random
 
+import mesa
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+
 def agent_portrayal(agent):
     
     if isinstance(agent, Radioactivity):
@@ -155,13 +162,65 @@ if __name__=="__main__":
 
     width = 16
     height = 15
-    
+
+    #model_params = {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8}
     model_params["width"] = width
     model_params["height"] = height
     grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
-    #server = ModularServer(RobotMission, [grid], "Robot Mission", {"N_green": 2, "N_yellow": 2, "N_red": 2, "width": width, "height": height, "num_waste": 8})
-    server = ModularServer(RobotMission, [grid], "Robot Mission", model_params)
+
+
+    chart_element0 = mesa.visualization.ChartModule(
+        [
+            {"Label": "NuclearWaste_green", "Color": "#D0F0C0"},
+            {"Label": "NuclearWaste_yellow", "Color": "#FFE8A1"},
+            {"Label": "NuclearWaste_red", "Color": "#E8AFAF"},
+        ]
+    )
+    chart_element1 = mesa.visualization.ChartModule(
+        [
+            {"Label": "NuclearWaste_taked_by_green", "Color": "#D0F0C0"},
+            {"Label": "NuclearWaste_yellow", "Color": "#FFE8A1"},
+            {"Label": "NuclearWaste_red", "Color": "#E8AFAF"},
+        ]
+    )
+
+
+
+    from tests_parameters import params_simulation_height, params_simulation_width, params_simulation_num_waste
+    # There must be a coherence between chosen_sumulation and labels_hue
+    chosen_simulation = params_simulation_width # params_simulation_height # params_simulation_num_waste
+    labels_hue = 'width' # "height" # 'num_waste'
+
+    results = mesa.batch_run(
+        RobotMission,
+        parameters=chosen_simulation,
+        iterations=5,
+        max_steps=100,
+        number_processes=1,
+        data_collection_period=1,
+        display_progress=True,
+    )
     
+    results_df = pd.DataFrame(results)
+    #print(results_df.columns)
+
+    g = sns.lineplot(
+        data=results_df,
+        x="Step",
+        #y="NuclearWaste_in_disposal_zone", 
+        y='avg_n_steps_without_waste_red',
+        hue=labels_hue,
+        errorbar=("ci", 95),
+        palette="tab10",
+    )
+    g.figure.set_size_inches(8, 4)
+    plot_title = "Number of red waste at the end of steps depending on number of initial waste"
+    g.set(title=plot_title, ylabel="Number of red waste");
+    plt.show()
+
+
+    server = ModularServer(RobotMission, [grid, chart_element0, chart_element1], "Robot Mission", model_params)
+
     #server.port = 8540
     
     server.port = random.randint(1, 8540)

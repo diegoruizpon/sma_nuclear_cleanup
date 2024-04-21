@@ -12,7 +12,7 @@ Team number: 4
 
 
 
-from mesa import Agent, Model
+from mesa import Agent, Model, DataCollector
 from mesa.time import RandomActivation
 from mesa.space import MultiGrid
 from agents import greenAgent, yellowAgent, redAgent
@@ -25,6 +25,7 @@ from communication.mailbox.Mailbox import Mailbox
 from communication.message.Message import Message
 from communication.message.MessagePerformative import MessagePerformative
 from communication.message.MessageService import MessageService
+from schedule import RandomActivationByTypeFiltered
 
 class RobotMission(Model):
     def __init__(self, N_green, N_yellow, N_red, num_waste , width, height):
@@ -38,7 +39,29 @@ class RobotMission(Model):
         self.N_red = N_red
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
-
+        #self.schedule = RandomActivation(self)
+        self.schedule = RandomActivationByTypeFiltered(self)
+        self.datacollector = DataCollector(
+            {
+                "NuclearWaste_green": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.wasteType == 0),
+                "NuclearWaste_yellow": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.wasteType == 1),
+                "NuclearWaste_red": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.wasteType == 2),
+                "NuclearWaste_taked_by_green": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 0),
+                "NuclearWaste_taked_by_yellow": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 1),
+                "NuclearWaste_taked_by_red": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 2),
+                "NuclearWaste_in_disposal_zone": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.in_disposal_zone == True),
+                "avg_n_steps_without_waste_green": lambda m: m.schedule.get_avg(greenAgent),
+                "avg_n_steps_without_waste_": lambda m: m.schedule.get_avg(yellowAgent),
+                "avg_n_steps_without_waste_red": lambda m: m.schedule.get_avg(redAgent),
+            }
+        )
 
         # Create Radioactivity
         for x in range(self.grid.width):
@@ -106,19 +129,22 @@ class RobotMission(Model):
                     if isinstance(element, NuclearWaste):
                         a.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
 
+        self.dict_of_agents = {'green': [], 'yellow': [], 'red': []}
         for i in range(N_green):
             create_agent(greenAgent, "green")
+            self.dict_of_agents['green'].append(self.schedule.agents[-1])
 
         for i in range(N_yellow):
             create_agent(yellowAgent, "yellow")
+            self.dict_of_agents['yellow'].append(self.schedule.agents[-1])
 
         for i in range(N_red):
             create_agent(redAgent, "red")
+            self.dict_of_agents['red'].append(self.schedule.agents[-1])
 
-        
-            
-            
+
         self.running = True
+        self.datacollector.collect(self)
         
     def do(self, agent, action):
         percepts = agent.knowledge
@@ -185,6 +211,8 @@ class RobotMission(Model):
                 element.robot = None
                 if not isinstance(agent, redAgent):
                     self.grid.place_agent(element, agent.pos)
+                else:
+                    element.in_disposal_zone = True
             agent.knowledge["have"] = []
             agent.knowledge["wasteCountHold"] = 0
             agent.knowledge["wasteTypeHold"] = None
@@ -214,6 +242,7 @@ class RobotMission(Model):
         self.__messages_service.dispatch_messages()
         self.__messages_service.dispatch_messages()
         self.schedule.step()
+        self.datacollector.collect(self)
 
     # Assuming 'model' is your model instance and it has attributes 'schedule' for the scheduler
 # and 'space' for the space where agents are placed (like a Grid or Network).

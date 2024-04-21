@@ -8,8 +8,7 @@ Team number: 4
 
 
 '''
-
-
+from skimage.morphology import skeletonize
 
 from mesa import Agent
 import random
@@ -23,6 +22,7 @@ class baseAgent(CommunicatingAgent):
         
         self.first_step = False
         self.robot_type = None
+        self.time_without_waste = 0
 
         self.knowledge = {
             "waste_type_I_can_hold": self.robot_type,
@@ -75,6 +75,7 @@ class baseAgent(CommunicatingAgent):
         # positions = ["pos_robot", "pos_N", "pos_W", "pos_S", "pos_E"]
         # comprehended_list = [f"{pos}, {self.knowledge[pos]['wasteType']}" for pos in positions]
         
+        #print(self.knowledge)
         possible_positions = self.model.grid.get_neighborhood(self.knowledge["pos"], moore=False, include_center=False)
         valid_directions = []
 
@@ -108,16 +109,20 @@ class baseAgent(CommunicatingAgent):
 
         if self.knowledge["waste_type_I_can_hold"] == 2 and self.knowledge["wasteCountHold"] == 1:
             if "E" in valid_directions:
+                self.time_without_waste = 0
                 action = "move_E"
             else:
                 action = "deposit"
+                self.time_without_waste = 0
         elif self.knowledge["wasteCountHold"] == 2:
+            self.time_without_waste = 0
             action = "transform"
 
         # agent has 1 yellow waste -> either deposit or moves east
         elif self.knowledge["wasteTypeHold"] == (self.knowledge["waste_type_I_can_hold"] + 1): # Means he holds a waste that has been transformed
             # there is zone2 at east and agent has 1 yellow waste -> deposit
             if cant_move_east: # WHY Pos_W ??  --> True, it is not Pos_W, but E, I corrected :)
+                self.time_without_waste = 0
                 action = "deposit"
                 print(self.robot_type + 1)
                 self.send_message(Message(self.unique_id, self.robot_type + 1, MessagePerformative.SEND_WASTE, self.knowledge["pos"])) 
@@ -126,12 +131,15 @@ class baseAgent(CommunicatingAgent):
             # he has 1 yellow waste -> move right
             elif "E" in valid_directions:
                 action = "move_E"
+                self.time_without_waste = 0
         # Here we know that it has 0 or 1 green waste
         # there is a green waste in agent position -> collect
         
         elif self.knowledge["pos_robot"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:
+            self.time_without_waste = 0
             action = "collect"
         else:
+            self.time_without_waste += 1
             # Try to move to a place with waste
             for i in valid_directions:
                 if self.knowledge[f"pos_{i}"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:
@@ -162,8 +170,6 @@ class greenAgent(baseAgent):
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = self.robot_type
 
-
-
 class yellowAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -171,11 +177,10 @@ class yellowAgent(baseAgent):
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = self.robot_type
 
-
-
 class redAgent(baseAgent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.robot_type = 2
         self.knowledge["waste_type_I_can_hold"] = self.robot_type
         self.knowledge["zone_I_can_move"] = 10
+

@@ -84,6 +84,7 @@ class baseAgent(CommunicatingAgent):
                 if message.get_performative() == MessagePerformative.SEND_WASTE:
                     self.knowledge["waste_pos"] = message.get_content()
                     if self.knowledge["wasteCountHold"] == 0:
+                        print("msg received")
                         return "move_to_waste"
                     
         if  self.knowledge["wasteCountHold"] == 0 and self.knowledge["waste_pos"] != None:
@@ -121,6 +122,8 @@ class baseAgent(CommunicatingAgent):
                 action = "deposit"
                 print(self.robot_type + 1)
                 self.send_message(Message(self.unique_id, self.robot_type + 1, MessagePerformative.SEND_WASTE, self.knowledge["pos"])) 
+                print("msg sent")
+                
             # elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2
             #     action = "deposit"
             # he has 1 yellow waste -> move right

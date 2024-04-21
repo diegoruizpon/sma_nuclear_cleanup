@@ -66,9 +66,10 @@ class MessageService:
     def find_agent_from_type(self, agent_type):
         """ Return the agent according to the agent name given.
         """
-        fist_agent = None
+        first_agent = None
         for agent in self.__scheduler.agents:
             if hasattr(agent,"get_count_waste") and agent.get_robot_type() == agent_type:
+                first_agent = agent
                 if agent.get_count_waste() == 0:
                     return agent
-        return fist_agent
+        return first_agent

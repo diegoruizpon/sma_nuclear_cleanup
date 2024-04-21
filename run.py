@@ -184,16 +184,18 @@ if __name__=="__main__":
         ]
     )
 
+
+
     from tests_parameters import model_params_simulation_height, model_params_simulation_width, model_params_simulation_num_waste
     # There must be a coherence between chosen_sumulation and labels_hue
-    chosen_simulation = model_params_simulation_height # model_params_simulation_width, model_params_simulation_num_waste
-    labels_hue = "height" # width, num_waste
+    chosen_simulation = model_params_simulation_width # model_params_simulation_height  model_params_simulation_num_waste
+    labels_hue = 'width' # "height" # 'num_waste'
 
     results = mesa.batch_run(
         RobotMission,
         parameters=chosen_simulation,
         iterations=5,
-        max_steps=200,
+        max_steps=100,
         number_processes=1,
         data_collection_period=1,
         display_progress=True,
@@ -205,7 +207,8 @@ if __name__=="__main__":
     g = sns.lineplot(
         data=results_df,
         x="Step",
-        y="NuclearWaste_red", # Ideal would be to put the waste recolected -> need to add a parameter to agent saying is recollected
+        #y="NuclearWaste_in_disposal_zone", 
+        y='avg_n_steps_without_waste_red',
         hue=labels_hue,
         errorbar=("ci", 95),
         palette="tab10",

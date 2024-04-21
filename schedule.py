@@ -29,3 +29,21 @@ class RandomActivationByTypeFiltered(mesa.time.RandomActivationByType):
             if filter_func is None or filter_func(agent):
                 count += 1
         return count
+
+    def get_avg(
+        self,
+        type_class: Type[mesa.Agent],
+    ) -> int:
+        """
+        Returns the current number of agents of certain type in the queue
+        that satisfy the filter function.
+        """
+        if type_class not in self.agents_by_type:
+            print("No agents of this type")
+            return 0
+        n_agent = 0
+        sum_avg_without_waste = 0
+        for agent in self.agents_by_type[type_class].values():
+            sum_avg_without_waste += agent.time_without_waste
+            n_agent += 1
+        return sum_avg_without_waste / n_agent

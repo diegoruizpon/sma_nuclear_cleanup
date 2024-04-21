@@ -50,6 +50,7 @@ class NuclearWaste(Agent):
         
         self.wasteType = wasteType # Start being green at the begining
         self.robot = None
+        self.in_disposal_zone = False
         #self.pos = pos It has to as self. pos to grid
         # self.is_green = self.is_yellow = self.is_red = False
         # if wasteType == 0:

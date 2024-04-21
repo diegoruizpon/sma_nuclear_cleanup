@@ -20,6 +20,8 @@ class baseAgent(Agent):
         
         self.first_step = False
         self.robot_type = None
+        self.time_without_waste = 0
+        self.times_without_waste = []
 
         self.knowledge = {
             "waste_type_I_can_hold": self.robot_type,
@@ -98,15 +100,19 @@ class baseAgent(Agent):
 
         if self.knowledge["waste_type_I_can_hold"] == 2 and self.knowledge["wasteCountHold"] == 1:
             if "E" in valid_directions:
+                self.time_without_waste = 0
                 action = "move_E"
             else:
                 action = "deposit"
+                self.time_without_waste = 0
         elif self.knowledge["wasteCountHold"] == 2:
+            self.time_without_waste = 0
             action = "transform"
         # agent has 1 yellow waste -> either deposit or moves east
         elif self.knowledge["wasteTypeHold"] == (self.knowledge["waste_type_I_can_hold"] + 1): # Means he holds a waste that has been transformed
             # there is zone2 at east and agent has 1 yellow waste -> deposit
             if cant_move_east: # WHY Pos_W ??  --> True, it is not Pos_W, but E, I corrected :)
+                self.time_without_waste = 0
                 action = "deposit"
             
             # elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2
@@ -114,12 +120,16 @@ class baseAgent(Agent):
             # he has 1 yellow waste -> move right
             elif "E" in valid_directions:
                 action = "move_E"
+                self.time_without_waste = 0
         # Here we know that it has 0 or 1 green waste
         # there is a green waste in agent position -> collect
         
         elif self.knowledge["pos_robot"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:
+            self.times_without_waste.append(self.time_without_waste)
+            self.time_without_waste = 0
             action = "collect"
         else:
+            self.time_without_waste += 1
             # Try to move to a place with waste
             for i in valid_directions:
                 if self.knowledge[f"pos_{i}"]["wasteType"] == self.knowledge["waste_type_I_can_hold"]:

@@ -45,6 +45,11 @@ class RobotMission(Model):
                     NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 1),
                 "NuclearWaste_taked_by_red": lambda m: m.schedule.get_type_count(
                     NuclearWaste, lambda x: x.robot != None and x.robot.robot_type == 2),
+                "NuclearWaste_in_disposal_zone": lambda m: m.schedule.get_type_count(
+                    NuclearWaste, lambda x: x.in_disposal_zone == True),
+                "avg_n_steps_without_waste_green": lambda m: m.schedule.get_avg(greenAgent),
+                "avg_n_steps_without_waste_": lambda m: m.schedule.get_avg(yellowAgent),
+                "avg_n_steps_without_waste_red": lambda m: m.schedule.get_avg(redAgent),
             }
         )
 
@@ -114,18 +119,20 @@ class RobotMission(Model):
                     if isinstance(element, NuclearWaste):
                         a.knowledge[f"pos_{direction}"]["wasteType"] = element.wasteType
 
+        self.dict_of_agents = {'green': [], 'yellow': [], 'red': []}
         for i in range(N_green):
             create_agent(greenAgent, "green")
+            self.dict_of_agents['green'].append(self.schedule.agents[-1])
 
         for i in range(N_yellow):
             create_agent(yellowAgent, "yellow")
+            self.dict_of_agents['yellow'].append(self.schedule.agents[-1])
 
         for i in range(N_red):
             create_agent(redAgent, "red")
+            self.dict_of_agents['red'].append(self.schedule.agents[-1])
 
-        
-            
-            
+
         self.running = True
         self.datacollector.collect(self)
         
@@ -190,6 +197,8 @@ class RobotMission(Model):
                 element.robot = None
                 if not isinstance(agent, redAgent):
                     self.grid.place_agent(element, agent.pos)
+                else:
+                    element.in_disposal_zone = True
             agent.knowledge["have"] = []
             agent.knowledge["wasteCountHold"] = 0
             agent.knowledge["wasteTypeHold"] = None

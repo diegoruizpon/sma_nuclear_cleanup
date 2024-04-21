@@ -13,11 +13,13 @@ Team number: 4
 
 from mesa import Agent
 import random
+from communication.message.Message import Message
+from communication.message.MessagePerformative import MessagePerformative
+from communication.agent.CommunicatingAgent import CommunicatingAgent
 
-
-class baseAgent(Agent):
+class baseAgent(CommunicatingAgent):
     def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
+        super().__init__(unique_id, model, unique_id)
         
         self.first_step = False
         self.robot_type = None
@@ -29,6 +31,7 @@ class baseAgent(Agent):
             "wasteCountHold": 0,
             "wasteTypeHold": 0,
             "have": [],
+            "waste_pos": (0,0),
             "pos_robot": {
                 "radioactivity_level": None,
                 "wasteType": None,
@@ -56,19 +59,36 @@ class baseAgent(Agent):
             },
         }
 
-        #self.knowledge
-        
+        #self. knowledge
+        #teste
+
+    def get_robot_type(self):
+        return self.robot_type
+    
+    def get_count_waste(self):
+        return self.knowledge["wasteCountHold"]
+    
     def update(self, percepts):
         self.knowledge = percepts
     
     def deliberate(self):
         # positions = ["pos_robot", "pos_N", "pos_W", "pos_S", "pos_E"]
         # comprehended_list = [f"{pos}, {self.knowledge[pos]['wasteType']}" for pos in positions]
-        #print(f"I am {self.unique_id}. My knowledge is {self.knowledge['pos']} : {comprehended_list}")
         
-        print(self.knowledge)
         possible_positions = self.model.grid.get_neighborhood(self.knowledge["pos"], moore=False, include_center=False)
         valid_directions = []
+
+        messages = self.get_new_messages()
+        if messages:
+            for message in messages:
+                if message.get_performative() == MessagePerformative.SEND_WASTE:
+                    self.knowledge["waste_pos"] = message.get_content()
+                    if self.knowledge["wasteCountHold"] == 0:
+                        return "move_to_waste"
+                    
+        if  self.knowledge["wasteCountHold"] == 0 and self.knowledge["waste_pos"] != None:
+            return "move_to_waste"
+        
         cant_move_east = self.knowledge["pos_E"]["radioactivity_level"] > self.knowledge["zone_I_can_move"]
         for cell in possible_positions:
             if cell[1] > self.pos[1]:
@@ -79,19 +99,9 @@ class baseAgent(Agent):
                 if not cant_move_east:
                     valid_directions.append("E")
                 else:
-                    print(self.knowledge["pos_E"]["radioactivity_level"], self.knowledge["zone_I_can_move"])
+                    pass
             elif cell[0] < self.pos[0]:  
                 valid_directions.append("W")
-
-        # WITH ERROR
-        # pos_list = ["N", "S", "E", "W"]
-        # for pos in pos_list:
-        #     # if there is a robot in the position, the agent can't move there
-        #     if self.knowledge[f"pos_{pos}"]["agent"] != False and pos in valid_directions:
-        #         print(f"Agent {self.unique_id} can't move to {pos}")
-        #         print(valid_directions)
-        #         valid_directions.remove(pos)
-        #         print(self.knowledge)
 
 
         action = None
@@ -103,12 +113,14 @@ class baseAgent(Agent):
                 action = "deposit"
         elif self.knowledge["wasteCountHold"] == 2:
             action = "transform"
+
         # agent has 1 yellow waste -> either deposit or moves east
         elif self.knowledge["wasteTypeHold"] == (self.knowledge["waste_type_I_can_hold"] + 1): # Means he holds a waste that has been transformed
             # there is zone2 at east and agent has 1 yellow waste -> deposit
             if cant_move_east: # WHY Pos_W ??  --> True, it is not Pos_W, but E, I corrected :)
                 action = "deposit"
-            
+                print(self.robot_type + 1)
+                self.send_message(Message(self.unique_id, self.robot_type + 1, MessagePerformative.SEND_WASTE, self.knowledge["pos"])) 
             # elif self.pos[0] >= 4:  # This is a function fake, delete when added zone 2
             #     action = "deposit"
             # he has 1 yellow waste -> move right
@@ -127,7 +139,6 @@ class baseAgent(Agent):
                     break
         if action == None:
             action = f"move_{random.choice(valid_directions)}"
-        print('action: ', action)
         return action 
         
     def step(self):
@@ -142,9 +153,6 @@ class baseAgent(Agent):
             self.update(percepts)
             action = self.deliberate()
             percepts = self.model.do(self, action)
-            #print(f"Agent {self.unique_id} has value {self.knowledge.get('wasteCount')}")   
-            #print(f"Agent {self.unique_id} is in {self.pos}")   
-        
 
 
 class greenAgent(baseAgent):

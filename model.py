@@ -30,17 +30,16 @@ from schedule import RandomActivationByTypeFiltered
 class RobotMission(Model):
     def __init__(self, N_green, N_yellow, N_red, num_waste , width, height):
         super().__init__()
-        self.schedule = RandomActivation(self)
-        print("Model created")
-        self.__messages_service = MessageService(self.schedule)
          
         self.N_green = N_green
         self.N_yellow = N_yellow
         self.N_red = N_red
         self.num_waste = num_waste
         self.grid = MultiGrid(width, height, torus = False)
-        #self.schedule = RandomActivation(self)
+        
         self.schedule = RandomActivationByTypeFiltered(self)
+        self.__messages_service = MessageService(self.schedule)
+
         self.datacollector = DataCollector(
             {
                 "NuclearWaste_green": lambda m: m.schedule.get_type_count(
@@ -162,6 +161,7 @@ class RobotMission(Model):
             elif "to_waste" in action:
                 x, y = percepts["waste_pos"]
                 agent.knowledge["waste_pos"] = None
+                print("tp to waste")
 
             self.grid.move_agent(agent, (x, y))
             agent.knowledge["pos"] = (x, y)

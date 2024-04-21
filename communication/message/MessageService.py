@@ -45,7 +45,9 @@ class MessageService:
     def dispatch_message(self, message):
         """ Dispatch the message to the right agent.
         """
-        self.find_agent_from_type(message.get_dest()).receive_message(message)
+        agent = self.find_agent_from_type(message.get_dest())
+        if agent is not None:
+            agent.receive_message(message)
 
     def dispatch_messages(self):
         """ Proceed each message received by the message service.
@@ -68,6 +70,7 @@ class MessageService:
         """
         first_agent = None
         for agent in self.__scheduler.agents:
+            print("number of agents = ", len(self.__scheduler.agents))
             if hasattr(agent,"get_count_waste") and agent.get_robot_type() == agent_type:
                 first_agent = agent
                 if agent.get_count_waste() == 0:

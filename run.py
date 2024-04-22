@@ -184,40 +184,22 @@ if __name__=="__main__":
         ]
     )
 
+    from tests_parameters import give_info_simulation, simulate_and_save_figure
+    labels_hues = ["width", "height", "num_waste"] # "N_green", 
+    colors = ["green", "yellow", "red"]
 
-
-    from tests_parameters import params_simulation_height, params_simulation_width, params_simulation_num_waste
-    # There must be a coherence between chosen_sumulation and labels_hue
-    chosen_simulation = params_simulation_width # params_simulation_height # params_simulation_num_waste
-    labels_hue = 'width' # "height" # 'num_waste'
-
-    results = mesa.batch_run(
-        RobotMission,
-        parameters=chosen_simulation,
-        iterations=5,
-        max_steps=100,
-        number_processes=1,
-        data_collection_period=1,
-        display_progress=True,
-    )
-    
-    results_df = pd.DataFrame(results)
-    #print(results_df.columns)
-
-    g = sns.lineplot(
-        data=results_df,
-        x="Step",
-        #y="NuclearWaste_in_disposal_zone", 
-        y='avg_n_steps_without_waste_red',
-        hue=labels_hue,
-        errorbar=("ci", 95),
-        palette="tab10",
-    )
-    g.figure.set_size_inches(8, 4)
-    plot_title = "Number of red waste at the end of steps depending on number of initial waste"
-    g.set(title=plot_title, ylabel="Number of red waste");
-    plt.show()
-
+    variable = "NuclearWaste_in_disposal_zone"
+    for labels_hue in labels_hues:
+        simulate_and_save_figure(mission=RobotMission, it=100, max_steps=300, simulation=variable, hue=labels_hue, color=None, communication=False)
+    variable = "avg_n_steps_without_waste_"
+    for labels_hue in labels_hues:
+        for color in colors:
+            simulate_and_save_figure(mission=RobotMission, it=100, max_steps=300, simulation=variable+color, hue=labels_hue, color=color, communication=False)
+    # variable = "avg_n_steps_without_waste_green"
+    # labels_hue = "width" # "height" # "num_waste"
+    # color = "green"
+    # simulate_and_save_figure(mission=RobotMission, it=5, max_steps=100, simulation=variable, hue=labels_hue, color=color, communication=False)
+  
 
     server = ModularServer(RobotMission, [grid, chart_element0, chart_element1], "Robot Mission", model_params)
 

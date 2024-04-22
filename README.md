@@ -102,6 +102,28 @@ Determine potential movement blocks based on robot type and zone limitations.
 
 - Otherwise, move randomly, avoiding cells with other robots.
 
+### Communication Procedure:
+
+ Functionality
+- **Waste Notification**: Each agent notifies a specific agent of another color about the location of newly identified waste that matches the receiver's color. For example:
+  - The green agent notifies the yellow agent about new yellow waste locations.
+  - Similarly, the yellow agent notifies the red agent about new red waste locations.
+
+- **Message Allocation**: Notifications about new waste are allocated to the first eligible agent of the appropriate color who currently has no waste assigned to them. This ensures efficient distribution of waste handling responsibilities.
+
+- **Storage and Redirection of Messages**:
+  - If all potential recipient agents already have waste assignments, the message is stored temporarily.
+  - The stored message is assigned to the first agent of the relevant color as soon as they clear their existing waste. This agent will then proceed to the specified waste location.
+
+Files Modified
+- `agents`: Updated to incorporate logic for managing waste assignments and notifications.
+- `model`: Enhanced to support new interactions and data flows between agents based on waste status.
+- `communication.message.MessageService`: Modified to handle the routing, storage, and delivery of waste-related messages between agents.
+
+### Implementation Notes
+This update introduces a more dynamic and responsive system for waste management among agents, promoting efficiency and responsiveness. Ensure all dependencies are correctly updated to integrate these changes seamlessly.
+
+
 
 ## Credits
 

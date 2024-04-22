@@ -196,33 +196,33 @@ The change in performance when communication is added is immense. In the followi
 <p align="center">
   <img src="Images/No_communication/NuclearWaste_in_disposal_zone_no_communication_hue_height.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_with_communication_hue_height.png" width="45%">
+  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_ with_communication_hue_height.png" width="45%">
 </p>
 
 <p align="center">
   <img src="Images/No_communication/NuclearWaste_in_disposal_zone_no_communication_hue_width.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_with_communication_hue_width.png" width="45%">
+  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_ with_communication_hue_width.png" width="45%">
 </p>
 
 <p align="center">
   <img src="Images/No_communication/NuclearWaste_in_disposal_zone_no_communication_hue_N_green.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_with_communication_hue_N_green.png" width="45%">
+  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_ with_communication_hue_N_green.png" width="45%">
 </p>
 
 <p align="center">
   <img src="Images/No_communication/NuclearWaste_in_disposal_zone_no_communication_hue_num_waste.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_with_communication_hue_num_waste.png" width="45%">
+  <img src="Images/With_communication/NuclearWaste_in_disposal_zone_ with_communication_hue_num_waste.png" width="45%">
 </p>
 
 The numbers of steps without collecting depending on the fact of having or not communication is almost the same.
 
 <p align="center">
-  <img src="Images/No_communication/avg_n_steps_without_waste_green_no_communication_hue_width.png" width="45%">
+  <img src="Images/No_communication/avg_n_steps_without_waste_green_ no_communication_hue_width.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/avg_n_steps_without_waste_green_with_communication_hue_width.png" width="45%">
+  <img src="Images/With_communication/avg_n_steps_without_waste_green_ with_communication_hue_width.png" width="45%">
 </p>
 
 (Is also the similar situation when seeing different types of num_waste, height and number of robot when we have communication or not. For simplicity this other plot comparation are not showed here, but are in the files).
@@ -232,13 +232,13 @@ Finally, to see how the red robots are working, we can see that with the communi
 <p align="center">
   <img src="Images/No_communication/avg_n_steps_without_waste_red_no_communication_hue_width.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/avg_n_steps_without_waste_red_with_communication_hue_width.png" width="45%">
+  <img src="Images/With_communication/avg_n_steps_without_waste_red_ with_communication_hue_width.png" width="45%">
 </p>
 
 <p align="center">
   <img src="Images/No_communication/avg_n_steps_without_waste_red_no_communication_hue_height.png" width="45%">
   &nbsp; &nbsp; &nbsp; &nbsp; <!-- Optional spacing -->
-  <img src="Images/With_communication/avg_n_steps_without_waste_red_with_communication_hue_height.png" width="45%">
+  <img src="Images/With_communication/avg_n_steps_without_waste_red_ with_communication_hue_height.png" width="45%">
 </p>
 
 ## Credits

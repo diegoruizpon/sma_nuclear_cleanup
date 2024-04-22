@@ -57,7 +57,7 @@ class RobotMission(Model):
                 "NuclearWaste_in_disposal_zone": lambda m: m.schedule.get_type_count(
                     NuclearWaste, lambda x: x.in_disposal_zone == True),
                 "avg_n_steps_without_waste_green": lambda m: m.schedule.get_avg(greenAgent),
-                "avg_n_steps_without_waste_": lambda m: m.schedule.get_avg(yellowAgent),
+                "avg_n_steps_without_waste_yellow": lambda m: m.schedule.get_avg(yellowAgent),
                 "avg_n_steps_without_waste_red": lambda m: m.schedule.get_avg(redAgent),
             }
         )

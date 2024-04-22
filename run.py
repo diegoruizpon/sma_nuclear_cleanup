@@ -219,6 +219,25 @@ if __name__=="__main__":
     plt.show()
 
 
+
+
+
+    from tests_parameters import give_info_simulation, simulate_and_save_figure
+    labels_hues = ["N_green", "width", "height", "num_waste"] #  
+    colors = ["green", "yellow", "red"]
+
+    # variable = "NuclearWaste_in_disposal_zone"
+    # for labels_hue in labels_hues:
+    #     simulate_and_save_figure(mission=RobotMission, it=100, max_steps=300, simulation=variable, hue=labels_hue, color=None, communication=True)
+    variable = "avg_n_steps_without_waste_"
+    for labels_hue in labels_hues:
+        for color in colors:
+            if labels_hue == "N_green" and color != "green":
+                continue
+            simulate_and_save_figure(mission=RobotMission, it=100, max_steps=300, simulation=variable+color, hue=labels_hue, color=color, communication=True)
+    
+
+
     server = ModularServer(RobotMission, [grid, chart_element0, chart_element1], "Robot Mission", model_params)
 
     #server.port = 8540
